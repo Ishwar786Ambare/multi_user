@@ -1,7 +1,8 @@
 from django.contrib.auth.forms import UserCreationForm
 from django import forms
 from django.db import transaction
-from .models import User,Customer,Employee
+from .models import User, Customer, Employee
+
 
 class CustomerSignUpForm(UserCreationForm):
     first_name = forms.CharField(required=True)
@@ -11,7 +12,7 @@ class CustomerSignUpForm(UserCreationForm):
 
     class Meta(UserCreationForm.Meta):
         model = User
-    
+
     @transaction.atomic
     def save(self):
         user = super().save(commit=False)
@@ -20,10 +21,11 @@ class CustomerSignUpForm(UserCreationForm):
         user.last_name = self.cleaned_data.get('last_name')
         user.save()
         customer = Customer.objects.create(user=user)
-        customer.phone_number=self.cleaned_data.get('phone_number')
-        customer.location=self.cleaned_data.get('location')
+        customer.phone_number = self.cleaned_data.get('phone_number')
+        customer.location = self.cleaned_data.get('location')
         customer.save()
         return user
+
 
 class EmployeeSignUpForm(UserCreationForm):
     first_name = forms.CharField(required=True)
@@ -43,7 +45,7 @@ class EmployeeSignUpForm(UserCreationForm):
         user.last_name = self.cleaned_data.get('last_name')
         user.save()
         employee = Employee.objects.create(user=user)
-        employee.phone_number=self.cleaned_data.get('phone_number')
-        employee.designation=self.cleaned_data.get('designation')
+        employee.phone_number = self.cleaned_data.get('phone_number')
+        employee.designation = self.cleaned_data.get('designation')
         employee.save()
         return user
